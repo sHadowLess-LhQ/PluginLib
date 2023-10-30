@@ -74,4 +74,4 @@ b、远程仓库引入
 
 其他具体使用方法参照原项目使用方法：
 
-[Phantom — 唯一零 Hook 稳定占坑类 Android 热更新插件化方案
+[Phantom — 唯一零 Hook 稳定占坑类 Android 热更新插件化方案](https://github.com/ManbangGroup/Phantom)

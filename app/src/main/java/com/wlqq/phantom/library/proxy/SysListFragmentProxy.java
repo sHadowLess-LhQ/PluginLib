@@ -17,8 +17,9 @@
 package com.wlqq.phantom.library.proxy;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Context;
+
+import androidx.fragment.app.ListFragment;
 
 
 public class SysListFragmentProxy extends ListFragment implements PhantomActivityAware {

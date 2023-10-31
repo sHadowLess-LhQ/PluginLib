@@ -17,8 +17,9 @@
 package com.wlqq.phantom.library.proxy;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * 由于final方法不能重写，对于需要改变行为的final方法需要进行代理。

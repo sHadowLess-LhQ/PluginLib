@@ -17,8 +17,9 @@
 package com.wlqq.phantom.library.proxy;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
+
+import androidx.fragment.app.DialogFragment;
 
 
 public class SysDialogFragmentProxy extends DialogFragment implements PhantomActivityAware {

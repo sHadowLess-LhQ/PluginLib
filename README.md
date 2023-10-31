@@ -18,6 +18,8 @@
 
 测试安卓5.1以下不支持ViewBinding
 
+不支持Navgation库，会报错需要在一个FragmentActivity的容器使用
+
 ### 安装教程
 
 Step 1. 添加maven仓库地址和配置

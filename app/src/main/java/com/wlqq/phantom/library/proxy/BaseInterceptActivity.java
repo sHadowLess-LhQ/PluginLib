@@ -38,7 +38,7 @@ import io.reactivex.disposables.Disposable;
  * @param <T>  the type 传递数据类型
  * @author sHadowLess
  */
-public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends PluginInterceptActivity implements View.OnClickListener, LifecycleEventObserver {
+public abstract class BaseInterceptActivity<VB extends ViewBinding> extends PluginInterceptActivity implements View.OnClickListener, LifecycleEventObserver {
     /**
      * 视图绑定
      */

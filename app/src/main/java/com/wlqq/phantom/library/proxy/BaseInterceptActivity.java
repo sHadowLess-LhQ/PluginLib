@@ -6,6 +6,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.viewbinding.ViewBinding;
 
 import com.rxjava.rxlife.RxLife;
@@ -35,7 +38,7 @@ import io.reactivex.disposables.Disposable;
  * @param <T>  the type 传递数据类型
  * @author sHadowLess
  */
-public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends PluginInterceptActivity implements View.OnClickListener {
+public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends PluginInterceptActivity implements View.OnClickListener, LifecycleEventObserver {
     /**
      * 视图绑定
      */
@@ -48,14 +51,9 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
             setTheme(customTheme);
         }
         super.onCreate(savedInstanceState);
+        getLifecycle().addObserver(this);
         initBindView();
         initViewListener();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initPermissionAndInitData();
     }
 
     @Override
@@ -63,6 +61,7 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
         if (null != bind) {
             bind = null;
         }
+        getLifecycle().removeObserver(this);
         super.onDestroy();
     }
 
@@ -70,6 +69,13 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
     public void onClick(View v) {
         if (!ClickUtils.isFastClick()) {
             click(v);
+        }
+    }
+
+    @Override
+    public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+        if (event == Lifecycle.Event.ON_RESUME) {
+            initPermissionAndInitData();
         }
     }
 
@@ -113,8 +119,8 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
         String[] permissions = permissions();
         if (null == permissions || permissions.length == 0) {
             initObject();
-            initBindDataLister();
             initData();
+            initView();
             return;
         }
         initPermission(permissions);
@@ -128,6 +134,7 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
     protected void initPermission(String[] permissions) {
         dealPermission(permissions, null);
     }
+
 
     /**
      * Deal permission.
@@ -155,7 +162,9 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
 
             @Override
             public void onError(@NonNull Throwable e) {
-                Toast.makeText(BaseInterceptActivity.this, "处理权限错误", Toast.LENGTH_SHORT).show();
+                if (callBack != null) {
+                    callBack.fail("处理权限错误", e);
+                }
             }
 
             @Override
@@ -165,8 +174,8 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
                         callBack.agree();
                     }
                     initObject();
-                    initBindDataLister();
                     initData();
+                    initView();
                 } else if (!ban.isEmpty()) {
                     if (callBack != null) {
                         callBack.ban(ban);
@@ -220,7 +229,7 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding, T> extends P
     /**
      * 给视图绑定数据
      */
-    protected abstract void initBindDataLister();
+    protected abstract void initView();
 
     /**
      * 初始化数据

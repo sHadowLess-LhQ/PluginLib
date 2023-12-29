@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
 import androidx.viewbinding.ViewBinding;
 
 import com.rxjava.rxlife.RxLife;
@@ -35,7 +36,6 @@ import io.reactivex.disposables.Disposable;
  * 基类Activity
  *
  * @param <VB> the type 视图
- * @param <T>  the type 传递数据类型
  * @author sHadowLess
  */
 public abstract class BaseInterceptActivity<VB extends ViewBinding> extends PluginInterceptActivity implements View.OnClickListener, LifecycleEventObserver {
@@ -44,14 +44,18 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding> extends Plug
      */
     private VB bind = null;
 
+    private LifecycleRegistry mFragmentLifecycleRegistry;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getLifecycle().addObserver(this);
+        mFragmentLifecycleRegistry = (LifecycleRegistry) getLifecycle();
         int customTheme = initTheme();
         if (-1 != customTheme) {
             setTheme(customTheme);
         }
         super.onCreate(savedInstanceState);
-        getLifecycle().addObserver(this);
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
         initBindView();
         initViewListener();
     }
@@ -63,6 +67,37 @@ public abstract class BaseInterceptActivity<VB extends ViewBinding> extends Plug
         }
         getLifecycle().removeObserver(this);
         super.onDestroy();
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mFragmentLifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
     }
 
     @Override

@@ -57,8 +57,8 @@ b、远程仓库引入
 
 ```
      dependencies {
-         implementation 'com.gitee.shadowless_lhq:plugin-lib:Tag'
-         implementation 'com.gitee.shadowless_lhq:common-lib:1.0.0'
+         implementation 'com.github.sHadowLess-LhQ:PluginLib:Tag'
+         implementation 'com.github.sHadowLess-LhQ:CommonLib:1.0.0'
          implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
          implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
          implementation 'com.github.liujingxing.rxlife:rxlife-rxjava2:2.2.2'
